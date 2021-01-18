@@ -50,9 +50,9 @@ class AppCategoryProductsCommand extends Command
         $qb = $repository->childrenQueryBuilder(null, false, null, 'ASC', false)
             ->join('App:Category', 'parent', Join::WITH, 'parent.lft <= node.lft AND parent.rgt >= node.lft')
             ->leftJoin('App:Product', 'item', Join::WITH, 'node = item.category')
-            ->select('parent.id, parent.name, parent.lft, parent.rgt, parent.lvl, count(item.id) as nm')
-            ->groupBy('parent.id')
-            ->orderBy('parent.lft')
+            ->select('item.name, parent.lft, parent.rgt, parent.lvl')
+            ->where('parent.id = 13')
+            ->orderBy('item.name')
         ;
 
         $rows = $qb->getQuery()->getArrayResult();
@@ -61,7 +61,7 @@ class AppCategoryProductsCommand extends Command
             'decorate' => true,
             'nodeDecorator' => function ($node)
             {
-                return "$node[name] ($node[nm])";
+                return "$node[name]";
             },
         ]);
 
